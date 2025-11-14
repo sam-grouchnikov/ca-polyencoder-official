@@ -48,5 +48,5 @@ Log into WandB (in terminal, `>> wandb login`, change project name to desired na
 
 ---
 
-Code By: Sam Grouchnikov
+Code By: Sam Grouchnikov\
 Project By: Jiho Noh, Sam Grouchnikov, Philip Gregory
