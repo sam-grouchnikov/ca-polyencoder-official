@@ -1,0 +1,9 @@
+wandb
+torch
+lightning
+pandas
+numpy
+transformers
+scipy
+matplotlib
+sentencepiece
