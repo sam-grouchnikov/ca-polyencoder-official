@@ -45,3 +45,8 @@ Log into WandB (in terminal, `>> wandb login`, change project name to desired na
 * Using other text encoders may positively change results
 * All small model details in `model/polyencoder.py` can be easily tweaked
 * We encourage you to contact us if you have any questions or discover anythign new! Email: sam.grouchnikov@gmail.com
+
+---
+
+Code By: Sam Grouchnikov
+Project By: Jiho Noh, Sam Grouchnikov, Philip Gregory
