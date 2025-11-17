@@ -4,8 +4,6 @@
 
 Hello developers and researchers! This Github repository is the extension of the academic paper on using poly-encoders (Humeau et al., 2019) for automated creativity asessment.
 
-This is a full guide on implementation details, and how you can run the poly-encoder on your local machine or via SSH. 
-
 ---
 
 ## Poly-Encoder Details
