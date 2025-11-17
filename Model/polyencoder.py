@@ -21,7 +21,7 @@ class PolyEncoder(nn.Module):
         self.cross_attn = nn.MultiheadAttention(embed_dim=self.hidden_size, num_heads=8, batch_first=True)
         self.norm = nn.LayerNorm(self.hidden_size)
 
-
+        # Poly-code initialization
         self.poly_codes = nn.Embedding(poly_m, self.hidden_size)
         self.register_buffer("poly_code_ids", torch.arange(poly_m))
 
@@ -40,7 +40,7 @@ class PolyEncoder(nn.Module):
             attention_mask=attention_mask,
             token_type_ids=token_type_ids
         )
-        cls_vec = outputs.last_hidden_state[:, 0, :]  # [B, H]
+        cls_vec = outputs.last_hidden_state[:, 0, :]
         return cls_vec
 
     # Poly-context computation
@@ -52,8 +52,8 @@ class PolyEncoder(nn.Module):
         )
         token_embeds = outputs.last_hidden_state
 
-        poly_codes = self.poly_codes(self.poly_code_ids)  # [M, H]
-        poly_codes = poly_codes.unsqueeze(0).expand(token_embeds.size(0), -1, -1)  # [B, M, H]
+        poly_codes = self.poly_codes(self.poly_code_ids)
+        poly_codes = poly_codes.unsqueeze(0).expand(token_embeds.size(0), -1, -1)
 
         # Attend codes to context, attended = poly-context
         attn_scores = torch.matmul(poly_codes, token_embeds.transpose(1, 2))
@@ -63,8 +63,8 @@ class PolyEncoder(nn.Module):
         return attended
 
     def forward(self, context_inputs, candidate_inputs):
-        context_vecs = self.encode_context(**context_inputs)  # [B, M, H]
-        candidate_vec = self.encode_candidate(**candidate_inputs)  # [B, H]
+        context_vecs = self.encode_context(**context_inputs)
+        candidate_vec = self.encode_candidate(**candidate_inputs)
         context_vecs = F.normalize(context_vecs, dim=-1)
         candidate_vec = F.normalize(candidate_vec, dim=-1)
 
