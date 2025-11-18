@@ -10,10 +10,10 @@ Hello developers and researchers! This Github repository is the extension of the
 
 ### Architecture
 
-<img src=poly%20encoder%20architecture.png  alt="alt-text" />
+<img src=pe%20modified.png  alt="alt-text" />
 
 1. The poly-encoder first separately encodes contexts (question/prompt) and candidate (response). 
-2. The poly encoder then attends *m* learnable codes to contexts, then attends candidates to this to generate a final
+2. The poly encoder then attends *m* learnable codes to contexts, then attends candidates to that to generate a final
 3. Poly-context and individual candidates are passed through a regression head to generate a single scalar score
 
 See exact details in `model/polyencoder.py`
@@ -42,7 +42,7 @@ Log into WandB (in terminal, `>> wandb login`, change project name to desired na
 * Researchers are encouraged to find better datasets to train on, and even apply poly-encoders to other multi-sentence scoring tasks
 * Using other text encoders may positively change results
 * All small model details in `model/polyencoder.py` can be easily tweaked
-* We encourage you to contact us if you have any questions or discover anythign new! Email: sam.grouchnikov@gmail.com
+* We encourage you to contact us if you have any questions or discover anything new! Email: sam.grouchnikov@gmail.com
 
 ---
 
