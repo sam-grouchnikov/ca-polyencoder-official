@@ -6,7 +6,7 @@ import torch
 class CreativityScoringDataset(Dataset):
     def __init__(self, csv_file, tokenizer_name, max_length=128):
         self.data = pd.read_csv(csv_file, header=0).fillna("")
-        self.data["prompt"] = self.data["prompt"].astype(str)
+        self.data["text"] = self.data["text"].astype(str)
         self.data["response"] = self.data["response"].astype(str)
 
         self.tokenizer = AutoTokenizer.from_pretrained(tokenizer_name)
@@ -18,7 +18,7 @@ class CreativityScoringDataset(Dataset):
     def __getitem__(self, idx):
         row = self.data.iloc[idx]
 
-        question = row["prompt"]
+        question = row["text"]
         response = row["response"]
 
         q_inputs = self.tokenizer(
