@@ -1,12 +1,10 @@
 from lightning.pytorch.loggers import WandbLogger
 from lightning.pytorch.strategies import DDPStrategy
 import lightning as pl
-from torch.utils.data import DataLoader, random_split
+from torch.utils.data import DataLoader
 import torch
 from Model.polyencoder import LightningModelWrapper
 from Model.dataset import CreativityScoringDataset
-from test import computeCorrelation
-from lightning.pytorch.callbacks import ModelCheckpoint
 
 
 def main():
@@ -56,9 +54,7 @@ def main():
 
     testPath = "path/to/test.csv"
 
-    correlation = computeCorrelation(best_model, testPath, batch, tokenizer, 128)
 
-    wandb_logger.log_metrics({"correlation": correlation})
 
 if __name__ == "__main__":
     main()
