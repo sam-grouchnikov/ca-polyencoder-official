@@ -16,7 +16,7 @@ def main():
 
     # Tokenizer you want to use
     # Ex. roberta-base
-    tokenizer = "desired-tokenizer"
+    tokenizer = "bert-base-uncased"
 
     trainDataset = CreativityScoringDataset("path/to/train.csv", tokenizer)
     valDataset = CreativityScoringDataset("path/to/val.csv", tokenizer)
