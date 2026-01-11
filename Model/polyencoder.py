@@ -5,7 +5,7 @@ import torch
 import torch.nn.functional as F
 from scipy.stats import pearsonr, spearmanr
 
-from test import computeCorrelation
+from Model.test import computeCorrelation
 
 
 class PolyEncoder(nn.Module):
