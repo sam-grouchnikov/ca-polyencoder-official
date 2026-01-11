@@ -1,14 +1,14 @@
 import torch.nn as nn
-from torch.utils.data import DataLoader
 from transformers import AutoModel, AutoTokenizer
 import lightning as pl
 import torch
 import torch.nn.functional as F
 from scipy.stats import pearsonr
 import time
-from Model.test import TestDataset
 import matplotlib.pyplot as plt
 import pandas as pd
+from torch.utils.data import Dataset, DataLoader
+
 
 
 class PolyEncoder(nn.Module):
@@ -165,8 +165,7 @@ class LightningModelWrapper(pl.LightningModule):
         return optimizer
 
 def computeCorrelation(model, csv_path, batch_size, tokenizer_name, max_length=128):
-    tokenizer = AutoTokenizer.from_pretrained(tokenizer_name, use_fast=True)
-
+    tokenizer = AutoTokenizer.from_pretrained(model.model_name, use_fast=True)
     dataset = TestDataset(csv_path, tokenizer, max_length=max_length)
     dataloader = DataLoader(
         dataset,
@@ -181,7 +180,6 @@ def computeCorrelation(model, csv_path, batch_size, tokenizer_name, max_length=1
     model.eval()
 
     preds, targets, questions = [], [], []
-    total_examples = len(dataset)
     total_inference_time = 0.0
 
     with torch.no_grad():
@@ -214,8 +212,6 @@ def computeCorrelation(model, csv_path, batch_size, tokenizer_name, max_length=1
     df.to_csv("pred_vs_actual.csv", index=False)
 
     print(f"Pearson correlation: {pearson_corr:.4f}")
-    avg_time_per_example = total_inference_time / total_examples
-    print(f"Avg time for each example: {avg_time_per_example:.4f}")
 
     plt.figure(figsize=(10, 18))
     plt.xlabel("Actual scores")
@@ -229,3 +225,47 @@ def computeCorrelation(model, csv_path, batch_size, tokenizer_name, max_length=1
     df.to_csv("pred_vs_actual_perprompt.csv", index=False)
 
     return pearson_corr
+
+class TestDataset(Dataset):
+    def __init__(self, csv_file, tokenizer, max_length=128):
+        self.max_length = max_length
+        self.tokenizer = tokenizer
+
+        df = pd.read_csv(csv_file)
+        self.questions = df["prompt"].astype(str).tolist()
+        self.responses = df["response"].astype(str).tolist()
+        self.scores = torch.tensor(df["score"].values, dtype=torch.float)
+
+        q_enc = self.tokenizer(
+                self.questions,
+                truncation=True,
+                padding="max_length",
+                max_length=self.max_length,
+                return_tensors="pt"
+        )
+
+        r_enc = self.tokenizer(
+                self.responses,
+                truncation=True,
+                padding="max_length",
+                max_length=self.max_length,
+                return_tensors="pt"
+        )
+
+        self.encodings = {
+                "question_input": q_enc,
+                "response_input": r_enc,
+                "score": self.scores,
+                "question_text": self.questions,
+            }
+
+    def __len__(self):
+        return len(self.encodings["score"])
+
+    def __getitem__(self, idx):
+        return {
+            "question_input": {k: v[idx] for k, v in self.encodings["question_input"].items()},
+            "response_input": {k: v[idx] for k, v in self.encodings["response_input"].items()},
+            "score": self.encodings["score"][idx],
+            "question_text": self.encodings["question_text"][idx],
+        }
