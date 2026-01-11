@@ -5,7 +5,8 @@ from torch.utils.data import DataLoader
 import torch
 from Model.polyencoder import LightningModelWrapper
 from Model.dataset import CreativityScoringDataset
-
+import os
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 def main():
 
