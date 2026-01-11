@@ -36,7 +36,7 @@ class CreativityScoringDataset(Dataset):
             return_tensors="pt"
         )
 
-        row_label = float(row["score"])
+        row_label = float(row["label"])
 
         # Return question + response + score
 
