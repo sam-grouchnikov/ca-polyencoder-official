@@ -18,8 +18,8 @@ def main():
     # Ex. roberta-base
     tokenizer = "bert-base-uncased"
 
-    trainDataset = CreativityScoringDataset("path/to/train.csv", tokenizer)
-    valDataset = CreativityScoringDataset("path/to/val.csv", tokenizer)
+    trainDataset = CreativityScoringDataset("/home/sam/ca-polyencoder-official/data/train.csv", tokenizer)
+    valDataset = CreativityScoringDataset("/home/sam/ca-polyencoder-official/data/train.csv", tokenizer)
 
     train_loader = DataLoader(trainDataset, batch_size=batch, shuffle=True, num_workers=15)
     val_loader = DataLoader(valDataset, batch_size=batch, shuffle=False, num_workers=15)
